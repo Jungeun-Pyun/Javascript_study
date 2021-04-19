@@ -1,0 +1,61 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // 변수란? 특정 값에 이름을 붙이는 것
+        // 혹은 특정 값을 저장할 수 있는 컨테이너
+        // 초기화란? 변수에 값을 부여하는 행위
+
+        // 1) let은 선언 후 재할당이 가능한 변수
+
+        // let myName;
+        // console.log(myName);
+        // myName = 'dahan';
+        // console.log(myName);
+        // myName = 'wonki';
+        // console.log(myName);
+
+        // 2) const는 선언 후 재할당이 불가능, 선언과 동시에 초기화해야 함
+
+        // const myName;
+        // const myName = 'dahan';
+        // console.log(myName);
+        // myName = 'wonki';
+
+        // 3) var는 ES6 이전의 문법이지만 예제에서 많이 찾을 수 있음
+        // 4) var는 함수 단위 스코프로 전역변수로 사용됨
+        //  - 함수 단위 스코프 : 함수 내 선언 = 지역변수 / 함수 외 선언 = 전역변수
+        //  - 블록 단위 스코프 : 함수를 포함한 모든 코드 내에서 선언 = 지역변수
+
+        if (true) {
+            var foo = true;
+        }
+        console.log(foo)
+        function varTest () {
+            var foo2 = true;
+        }
+        console.log(foo2)
+        if (true) {
+            let foo3 = true;
+        }
+        console.log(foo3)
+
+        // 5) var는 변수의 재선언이 가능
+
+        var myName = 'dahan';
+        console.log(myName)
+        var myName = 'wonki'; // 변수의 재선언
+        console.log(myName)
+
+        let myName = 'dahan';
+        console.log(myName)
+        let myName = 'wonki'; // 변수의 재선언시 에러
+        console.log(myName)
+
+    </script>    
+</body>
+</html>
