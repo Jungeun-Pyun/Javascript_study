@@ -15,7 +15,7 @@
 
 컴파일 언어가 컴파일 하는데 시간은 걸리지만 실행 속도는 더 빠르다. 줄 단위로 번역 및 실행되는 인터프리터는 컴파일 언어보단 실행 속도가 느리다.
 
-<img src="/images/compileVSinterpreter.png" width="80%" height="60%" title="컴파일언어 vs 인터프리터언어"></img>  
+![Alt text](/images/compileVSinterpreter.png "컴파일언어 vs 인터프리터언어")
 
 1\. 자바스크립트의 특징
 
