@@ -4,7 +4,7 @@
 <모던 자바스크립트 입문> 서적을 기반으로 스터디한 내용을 담고있습니다. 스터디 진행에 따라 지속적으로 업데이트 예정입니다.
 
 ---
-
+<p></p>
 ### 1장 자바스크립트의 개요
 
 컴퓨터는 기본적으로 기계어만 이해할 수 있다. 하지만 기계어를 사람이 이해하기는 쉽지 않다. 따라서 **프로그래밍 언어**는 사람이 이해할 수 있는 언어로 프로그램을 작성하고 그 프로그램을 기계어로 번역해서 컴퓨터가 실행될 수 있도록 한다.
@@ -176,3 +176,296 @@ operator.js
 </pre>
 
 블로그링크 : <https://jungeunpyun.tistory.com/45>
+
+---
+
+### 6장 웹 브라우저에서의 입출력
+
+웹 브라우저에서 HTML을 이용해서 여러 방식으로 입출력을 하게 되는데 그 대표적인 예제들을 살펴보자!
+
+#### 1\. 대화상자 & console
+
+-   대화상자용 메서드는 3가지가 있다 : alert(경고창), prompt(입력창), confirm(확인창)
+-   대화상자는 모달 창이다. 모달 창은 해당 창이 떠있는 동안 기존 창(부모 창) 조작이 불가하다.
+
+```HTML
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>대화상자</title>
+	<script>
+		alert("안녕하세요!")
+		var name = prompt("이름을 입력하세요")
+		var age = parseInt(prompt("나이를 입력하세요"))
+		// prompt는 문자열만 받아옴
+		var ret = confirm("링크를 표시하겠습니까?")
+		console.log(`이름은 ${name} 나이는 ${age} 입니다.`)
+		console.log(`이름은 %s 나이는 %i 입니다.`, name, age)
+
+		var p={x:1, y:2}
+		console.dir(p)
+		//객체의 프로퍼티 나열
+
+		console.time("elapsed_time")
+		alert("확인 버튼을 누르세요")
+		console.timeEnd("elapsed_time")
+		// 시작시간, 종료시간으로 경과시간 구하는 메서드
+		// 인수 : 타이머이름
+		// 단위 : ms
+
+	</script>
+</head>
+<body>
+</body>
+</html>
+```
+
+#### 2\. 이벤트 처리기
+
+웹브라우저의 동작은 이벤트 주도형 프로그램을 기반으로 한다.
+
+-   이벤트 주도형 프로그램 : 이벤트가 발생할때까지 기다렸다가 이벤트가 발생했을 때 미리 등록해둔 작업을 수행하는 프로그램
+-   이벤트 : 사용자가 버튼을 클릭하는 등의 행위
+-   이벤트 처리기 : 이벤트가 발생했을 때 실행되는 함수
+
+함수를 이벤트 처리기로 등록하는 방법 3가지
+
+1.  HTML 요소의 속성으로 등록
+2.  DOM 요소의 프로퍼티로 등록
+3.  addEventListener 메서드 사용
+
+이번장에서는 1번과 2번만 알아보도록 하겠다.
+
+**1\. HTML 요소의 속성으로 등록**
+
+```HTML
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>시각을 콘솔에 표시하기</title>
+	<script>
+		let input = "test"
+		function displayTime() {
+			var d = new Date();
+			console.log(d)
+			console.log("현재 시각은 " + d.toLocaleString() + " 입니다.") ;
+			
+		}
+	</script>
+</head>
+<body>
+	<input type="button" value="click" onclick="displayTime()">
+	<!-- onclick : 이벤트 처리기 속성 p:174-->
+	<!-- <input type="button" value="click" ondblclick="displayTime()"> -->
+	<!-- <input type="button" value="click" onkeydown="displayTime()"> -->
+	<!-- <input type="button" value="click" onkeyup="displayTime()"> -->
+</body>
+</html>
+```
+
+-   script 태그 안에 이벤트 처리기 함수를 작성한다.
+-   HTML의 각 요소에 이벤트를 걸어둘 수 있고 해당 이벤트에 이벤트 처리기 함수를 등록한다.
+
+**2\. DOM 요소의 프로퍼티로 등록**
+
+DOM(Document Object Model - 문서 객체 모델)이란 웹 페이지에 대한 프로그래밍 인터페이스를 의미한다.
+
+-   HTML : 화면에 보이고자 하는 모양과 구조를 문서로 만든 것, 단순 텍스트이다. (최초에 화면을 그릴때 사용하는 설계도)
+-   DOM : HTML 문서의 내용과 구조가 객체 모델로 변화되어 다양한 프로그램에서 사용될 수 있다. (설계도를 이용하여 실제로 화면에 나타내지는 인터페이스)
+
+HTML에서 사용되는 태그를 자바스크립트에서 이용할 수 있는 객체로 만들면 그것이 문서 객체이다.
+
+DOM을 이용해서 이벤트 처리기를 등록하면 java script 내에서 HTML요소를 조작할 수 있다!
+
+```HTML
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>시각을 콘솔에 표시하기</title>
+	<script>
+		function displayTime() {
+			var d = new Date();
+			console.log("현재 시각은 " + d.toLocaleString() + " 입니다.") ;
+		}
+		// ① Window 객체의 onload 프로퍼티에 함수를 저장한다
+		// 이 함수는 웹 브라우저가 문서를 모두 읽어 들인 후에 실행된다
+		// HTML값을 받아와야 하는데 스크립트가 문서의 마지막에 위치해있기 때문에 
+        // javascript가 동작할 때 받아올 수 없음
+		// onload 메서드를 이용해서 HTML을 모두 읽어들인 후에 함수가 동작하게끔 함
+		window.onload = function() {
+			// ② input 요소의 객체 가져오기
+			// getElementById : 인수로 id 받아옴
+			var button = document.getElementById("button");
+			//------------------------------
+			console.log(button, typeof(button)) //object
+
+			// ③ input 요소를 클릭했을 때 동작하는 이벤트 처리기를 등록한다
+			// 동작을 javascript에서 할 수 있음
+			button.onclick = displayTime;
+
+			// ------------------------------
+			// 이벤트 제거시 null 입력
+			button.onclick = null
+		};
+	</script>
+</head>
+<body>
+	<input type="button" value="click" id="button">
+	<!-- id : "button" -->
+</body>
+</html>
+```
+
+-   DOM을 사용할 땐 HTML의 요소에 id를 입력한다.
+-   java script에서 getElementById로 HTML 요소에 걸어둔 id를 가져올 수 있다.
+-   HTML 요소에 걸어줄 이벤트를 java script 내에서 조작하고 동작하게끔 할 수 있다.
+-   HTML 요소를 java script로 가져와서 사용할 때 주의해야 할 점은, HTML이 동작하는 함수를 window.onload 메서드 안에 넣어주어야 한다. 스크립트는 위에서부터 아래로 순차적으로 진행된다. 위쪽에 있는 java script가 동작할 때 아직 HTML 요소는 읽히지 않은 상태이다. 따라서 HTML 요소까지 모두 읽어 들인 후 마지막에 해당 함수를 동작하게끔 하는 것이 window.onload의 역할이다.
+
+#### 3\. 타이머 메소드
+
+시간에 따른 동작을 할 수 있는 메서드를 알아보자.
+
+-   setTimeout : 일정 시간 후에 한 번만 동작하는 메서드
+-   setInterval : 일정 시간마다 동작을 반복하는 메서드
+
+```HTML
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>타이머</title>
+	<script>
+		setTimeout(function() {
+			console.log(new Date())
+		}, 2000)
+
+		var timer = setInterval(function() {
+			console.log(new Date())
+		}, 2000)
+
+		clearTimeout(timer)
+
+	</script>
+</head>
+<body>
+
+</body>
+</html>
+```
+
+-   메서드에 함수와, 시간 인수가 들어간다. 시간은 ms 단위이다.
+-   해당 메소드 자체를 변수에 넣고 clearTimeout을 하면 초기화를 할 수 있다.
+
+#### 4\. innerHTML
+
+DOM을 이용하여 java script내에서 HTML 요소를 조작할 때, innerHTML 요소로 HTML 자체를 변경할 수 있다.
+
+```HTML
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<title>스톱워치</title>
+	<script>
+		window.onload = function() {
+			var startButton = document.getElementById("start");	// start 버튼 요소
+			var stopButton = document.getElementById("stop");	// stop 버튼 요소
+			var display = document.getElementById("display");	// 결과를 표시하는 요소
+			var startTime,timer;
+			startButton.onclick = start;	// strat 버튼 활성화
+			function start() {
+				startButton.onclick = null;	// start 시작하면 바로 start 버튼 비활성화
+				stopButton.onclick = stop;	// stop 버튼 활성화
+				startTime = new Date();
+				// 0.01 초마다 경과한 시간을 표시
+				timer = setInterval(function() {
+					var now = new Date();
+					// #display에 경과한 시간 쓰기
+					// innerHTML을 사용하면 HTML 요소의 내용 변경 가능
+					display.innerHTML = ((now - startTime)/1000).toFixed(2);
+				},10);
+			}
+			function stop() {
+				clearInterval(timer);			// 타이머 해제
+				startButton.onclick = start;	// strat 버튼 활성화
+			}
+		};
+	</script>
+</head>
+<body>
+	<p id="display">0.00</p>
+	<input id="start" type="button" value="start">
+	<input id="stop" type="button" value="stop">
+</body>
+</html>
+```
+
+-   display.innerHTML을 이용하여 HTML의 display 요소의 값을 0.01초마다 수정한다.
+
+#### 5\. 폼 컨트롤 요소
+
+HTML 요소에 input을 입력할 때 value값 외에 checked 여부도 확인할 수 있다.
+
+```HTML
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>체질량지수 계산하기</title>
+	<script>
+        window.onload = function() {
+            document.getElementById("button").onclick = function() {
+                // input 요소에 입력된 몸무게 데이터와 키 데이터를 가져온다
+                var h = parseFloat(document.getElementById("height").value);
+                var w = parseFloat(document.getElementById("weight").value);
+                // 체질량지수를 bmi라는 id를 가진 요소(output 요소)에 기록한다
+                var bmi = document.getElementById("bmi");
+                bmi.innerHTML = (w/h/h).toFixed(1);
+            };
+            //체크박스 클릭 여부 확인
+            document.getElementById("checkBox").onchange = function() {
+                console.log(document.getElementById("checkBox").checked)
+            }
+        };
+	</script>
+</head>
+<body>
+	<p>키: <input type="number" id="height"> m</p>
+	<p>몸무게: <input type="number" id="weight"> kg</p>
+	<p>당신의 체질량지수는 <output id="bmi">?</output> 입니다</p>
+	<input type="button" id="button" value="계산">
+    <p>checkBox <input type="checkbox" id="checkBox"></p>
+</body>
+</html>
+```
+
+-   value값은 문자열로만 받아오기 때문에, 숫자 값을 가져오는 경우엔 parseInt 또는 parseFloat를 사용해야 한다.
+-   checked는 true, false로 결과를 받는다.
+
+#### 6\. document.write
+
+document.writea메서드는 인수로 받은 문자열을 HTML 문서의 body 요소 안에 출력한다. 이벤트 처리기 내에서 실행하면 전체 HTML 내용이 document.write 출력 값으로 바뀌고 그 뒤로 HTML 문서를 수정할 수 없다. 따라서 해당 방법은 실무적으로 추천하지 않고, 동적으로 HTML 문서 변경하려면 DOM을 사용하는 것을 추천한다.
+
+```HTML
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>document.write</title>
+	<script>
+        var now = new Date()
+        var month = now.getMonth() + 1
+        var day = now.getDate()
+        document.write(`<p>오늘은 ${month}월 ${day}일 입니다.</p>`)
+	</script>
+</head>
+<body>
+    <!-- document.write 내용이 출력됨 -->
+</body>
+</html>
+```
+
+관련 코드 정리 : [https://github.com/Jungeun-Pyun/Javascript\_study](https://github.com/Jungeun-Pyun/Javascript_study)
