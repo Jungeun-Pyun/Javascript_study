@@ -1,0 +1,35 @@
+<!-- 웹브라우저의 동작은 이벤트 주도형 프로그램을 기반으로 한다.
+이벤트 주도형 프로그램 : 이벤트가 발생할때까지 기다렸다가 이벤트가 발생했을때 미리 등록해둔 작업을 수행하는 프로그램
+이벤트 : 사용자가 버튼을 클릭하는등의 행위 
+이벤트 처리기 : 이벤트가 발생했을 때 실행되는 함수 
+
+함수를 이벤트 처리기로 등록하는 방법 3가지
+1. HTML 요소의 속성으로 등록
+2. DOM 요소의 프로퍼티로 등록
+3. addEventListener 메서드 사용 -> 15장에서 다시 설명
+
+
+1.  HTML 요소의 속성으로 등록-->
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>시각을 콘솔에 표시하기</title>
+	<script>
+		let input = "test"
+		function displayTime() {
+			var d = new Date();
+			console.log(d)
+			console.log("현재 시각은 " + d.toLocaleString() + " 입니다.") ;
+			
+		}
+	</script>
+</head>
+<body>
+	<input type="button" value="click" onclick="displayTime()">
+	<!-- onclick : 이벤트 처리기 속성 p:174-->
+	<!-- <input type="button" value="click" ondblclick="displayTime()"> -->
+	<!-- <input type="button" value="click" onkeydown="displayTime()"> -->
+	<!-- <input type="button" value="click" onkeyup="displayTime()"> -->
+</body>
+</html>

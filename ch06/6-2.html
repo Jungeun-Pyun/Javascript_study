@@ -1,0 +1,54 @@
+<!-- 
+2. DOM 요소의 프로퍼티로 등록
+
+DOM (Document Object Model - 문서 객체 모델) - 14장
+: 웹 페이지에 대한 프로그래밍 인터페이스
+
+HTML : 화면에 보이고자 하는 모양과 구조를 문서로 만든 것, 단순 텍스트
+(최초에 화면을 그릴때 사용하는 설계도)
+
+DOM : HTML 문서의 내용과 구조가 객체 모델로 변화되어 다양한 프로그램에서 사용될 수 있음
+(설계도를 이용하여 실제로 화면에 나타내지는 인터페이스)
+
+HTML에서 사용되는 태그를 자바스크립트에서 이용할 수 있는 객체로 만들면 그것이 문서 객체이다.
+
+
+DOM을 이용해서 이벤트 처리기 등록하기(DOM 요소의 프로퍼티로 등록)
+DOM을 이용해서 이벤트 처리기를 등록하면 java script 내에서 HTML요소를 조작할 수 있음
+-->
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>시각을 콘솔에 표시하기</title>
+	<script>
+		function displayTime() {
+			var d = new Date();
+			console.log("현재 시각은 " + d.toLocaleString() + " 입니다.") ;
+		}
+		// ① Window 객체의 onload 프로퍼티에 함수를 저장한다
+		// 이 함수는 웹 브라우저가 문서를 모두 읽어 들인 후에 실행된다
+		// HTML값을 받아와야 하는데 스크립트가 문서의 마지막에 위치해있기 때문에 javascript가 동작할 때 받아올 수 없음
+		// onload 메서드를 이용해서 HTML을 모두 읽어들인 후에 함수가 동작하게끔 함
+		window.onload = function() {
+			// ② input 요소의 객체 가져오기
+			// getElementById : 인수로 id 받아옴
+			var button = document.getElementById("button");
+			//------------------------------
+			console.log(button, typeof(button))
+
+			// ③ input 요소를 클릭했을 때 동작하는 이벤트 처리기를 등록한다
+			// 동작을 javascript에서 할 수 있음
+			button.onclick = displayTime;
+
+			// ------------------------------
+			// 이벤트 제거시 null 입력
+			button.onclick = null
+		};
+	</script>
+</head>
+<body>
+	<input type="button" value="click" id="button">
+	<!-- id : "button" -->
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!-- 웹 브라우저에서 HTML을 이용해서 여러 방식으로 입출력을 하게 되는데 그 대표적인 예제들을 살펴보자!
+
+가장 간단한 예시 : 대화상자 & console
+
+대화상자용 메서드 3개 : alert(경고창), prompt(입력창), confirm(확인창)
+
+대화상자 : 모달창 (해당창이 떠있는동안 기존 창 조작 불가) -->
+
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>대화상자</title>
+	<script>
+		// alert("안녕하세요!")
+		// var name = prompt("이름을 입력하세요")
+		// var age = parseInt(prompt("나이를 입력하세요"))
+		// // prompt는 문자열만 받아옴
+		// var ret = confirm("링크를 표시하겠습니까?")
+		// console.log(`이름은 ${name} 나이는 ${age} 입니다.`)
+		// console.log(`이름은 %s 나이는 %i 입니다.`, name, age)
+
+		var p={x:1, y:2}
+		console.dir(p)
+		//객체의 프로퍼티 나열
+
+		console.time("elapsed_time")
+		alert("확인 버튼을 누르세요")
+		console.timeEnd("elapsed_time")
+		// 시작시간, 종료시간으로 경과시간 구하는 메서드
+		// 인수 : 타이머이름
+		// 단위 : ms
+
+	</script>
+</head>
+<body>
+</body>
+</html>
