@@ -4,7 +4,7 @@
 <모던 자바스크립트 입문> 서적을 기반으로 스터디한 내용을 담고있습니다. 스터디 진행에 따라 지속적으로 업데이트 예정입니다.
 
 ---
-<p></p>
+
 ### 1장 자바스크립트의 개요
 
 컴퓨터는 기본적으로 기계어만 이해할 수 있다. 하지만 기계어를 사람이 이해하기는 쉽지 않다. 따라서 **프로그래밍 언어**는 사람이 이해할 수 있는 언어로 프로그램을 작성하고 그 프로그램을 기계어로 번역해서 컴퓨터가 실행될 수 있도록 한다.
@@ -31,6 +31,7 @@
 -   초창기 자바스크립트와 브라우저의 호환성이 매우 낮았으나, ECMAScript 표준화가 진행되면서 호환성 문제가 해결되었다.
 
 ---
+<br></br>
 
 ### 3장 변수와 값
 
@@ -69,6 +70,8 @@
 블로그링크 : <https://jungeunpyun.tistory.com/44>
 
 ---
+<br></br>
+
 
 ### 4장 객체와 배열, 함수의 기초
 
@@ -163,6 +166,8 @@ object.js
 블로그링크 : <https://jungeunpyun.tistory.com/45>
 
 ---
+<br></br>
+
 
 ### 5장 표현식과 연산자
 
@@ -178,6 +183,7 @@ operator.js
 블로그링크 : <https://jungeunpyun.tistory.com/45>
 
 ---
+<br></br>
 
 ### 6장 웹 브라우저에서의 입출력
 
@@ -467,5 +473,13 @@ document.writea메서드는 인수로 받은 문자열을 HTML 문서의 body �
 </body>
 </html>
 ```
+<pre>
+<code>
+참고 코드
+ch06 폴더
+</code>
+</pre>
 
-관련 코드 정리 : [https://github.com/Jungeun-Pyun/Javascript\_study](https://github.com/Jungeun-Pyun/Javascript_study)
+블로그링크 : <https://jungeunpyun.tistory.com/57>
+
+
