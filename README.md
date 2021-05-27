@@ -482,4 +482,397 @@ ch06 폴더
 
 블로그링크 : <https://jungeunpyun.tistory.com/57>
 
+---
+<br></br>
 
+### 7장 제어구문
+
+자바스크립트에서 문장은 위에서부터 아래로 순차적으로 실행된다. 제어 구문을 사용하면 순차적 실행 흐름을 변화시킬 수 있다.
+
+#### 제어 구문의 종류
+
+1.  조건문 : if/else, switch, try/catch/finally => 조건에 따라 분기 처리한다.
+2.  반복문 : while, do/while, for, for/in, for/of => 조건 만족 시에 반복한다.
+3.  점프 문 : break, continue, return, throw => 실행 위치를 이동한다.
+
+#### 조건문
+
+**1\. if/else**
+
+```java script
+// if/else 기본 구조
+if (조건식) 문장 //{} : 문장이 여러줄일 경우 사용
+if (조건식) 문장1 else 문장2
+```
+
+```java script
+var name = "d"
+if (!name) { //name이 null, undefined, false..
+	name=""
+	message = "이름을 입력하세요"
+} else message="이름은 " + name + " 입니다"
+console.log(message)
+
+
+//else if
+var num = 1
+if(num == 1){
+	console.log("One")
+} else { //중괄호 생략 가능
+	if(num == 2){
+		console.log("Two")
+	} else {
+		console.log("Other")
+	}
+}
+
+if(num == 1){
+	console.log("One")
+} else if(num == 2){
+	console.log("Two")
+} else {
+	console.log("Other")
+}
+```
+
+-   동작의 하나로 되어있으면 중괄호 생략이 가능하다.
+-   else의 동작으로 2중 if문이 구성되는데, 중괄호가 생략되어 else if로 사용 가능하다.
+
+```java script
+function isLeapYear(year) { 
+   if( (year % 400 == 0) || ((year % 4 == 0) && (year % 100 != 0)) ) { //계산순서 앞에서부터
+      return true;
+   }
+   return false;
+}
+console.log("1900: "+isLeapYear(1900));
+console.log("2000: "+isLeapYear(2000));
+console.log("2001: "+isLeapYear(2001));
+console.log("2002: "+isLeapYear(2002));
+console.log("2003: "+isLeapYear(2003));
+console.log("2004: "+isLeapYear(2004));
+```
+
+-   윤년을 구하는 예제이다.
+
+**2\. switch문**
+
+if/else문보다 많은 분기를 간결하게 표현할 수 있다.
+
+```java script
+//switch문 기본 구성
+
+switch(표현식) {
+case 표현식1 : 실행문1
+case 표현식2 : 실행문2
+...
+case 표현식n : 실행문n
+default: 실행문n+1
+}
+```
+
+-   case 뒤에 여러 표현식 사용 가능하지만 깔끔한 코드 구성을 위해 일반적으로 숫자 또는 문자열 사용하는 것을 추천한다.
+
+```java script
+switch(n){
+  case 1:
+  console.log("One");
+  break;
+  case 2:
+  console.log("Two");
+  break;
+  case 3:
+  console.log("Three");
+  break;
+  default: //위치 상관 없음
+  console.log("Other");
+}
+```
+
+-   switch문은 case에 따라 실행은 가능하지만 종료는 불가하다. 따라서 중간에 break를 넣어서 switch문을 종료시켜주어야 한다.
+-   종료하지 않으면 다음 case를 모두 실행한다.
+
+```java script
+function binaryOperation(a, b, operator) {
+	switch(operator) {
+      case "+": return a + b;
+      case "-": return a - b;
+      case "*": return a * b;
+      case "/": return a / b;
+      case "%": return a % b;
+      case "^": return Math.pow(a, b);
+      default: return NaN;
+	}
+}
+console.log(binaryOperation(2,3,"+"));
+console.log(binaryOperation(2,3,"-"));
+console.log(binaryOperation(2,3,"*"));
+console.log(binaryOperation(2,3,"^"));
+console.log(binaryOperation(2,3,"A"));
+
+```
+
+-   함수 내에서 switch문을 사용할 땐 return을 사용해서 함수를 종료시키는 방식으로 사용 가능하다.
+
+#### 반복문
+
+**1\. while문**
+
+조건에 맞으면 동일한 동작을 반복한다.
+
+```java script
+//while문 기본 구성
+while (조건식) 동작
+```
+
+```java script
+function fact(n) {
+    var k = 1, i = 1;
+    while( i < n ) {
+        console.log("i = " + i + ", k = " + k ); //반복문 사용할땐 콘솔찍어서 값 변화 확인해보는것이 좋음!
+        k *= (++i);
+
+    }
+    console.log("i = " + i + ", k = " + k );
+    return k;
+}
+
+fact(5);
+
+```
+
+-   조건식은 true/false를 반환해야 한다.
+-   반복문을 사용할 땐 중간에 콘솔을 찍어서 반복문의 값을 확인해 보는 것이 좋다.
+
+**2\. do/while문**
+
+while문은 반복 여부를 시작에서 판단하지만, do/while문은 반복 여부를 마지막에 판단한다. 따라서 do/while문은 조건이 false임에도 무조건 한 번은 실행된다.
+
+```java script
+// do/while문 기본 문법
+
+do 문장 while(조건식);
+//마지막에 세미콜론!!
+```
+
+```java script
+function fact(n) {
+	var k = 1, i = n;
+	do {
+        console.log("i = " + i + ", k = " + k );
+		k *= i--;
+	} while( i>0 );
+	return k;
+}
+fact(5); // -> 120
+```
+
+-   do/while문 뒤에는 무조건 세미콜론을 찍어주어야 한다.
+
+**3\. for문**
+
+```java script
+//for문 기본 문법
+for (초기화식; 조건식; 반복식) 문장
+```
+
+-   for문 동작 순서 : 초기화 1번 -> 조건식 평가 -> 문장 실행 -> 반복식 -> 조건식 평가
+
+```java script
+for(var i=1; i<10; i++){
+	console.log(i)
+}
+
+for(var i=1, sum=0; i<10; i++){
+	sum += i;
+	console.log(sum)
+}
+
+for(;   ;){ //세미콜론 생략 불가, 조건식 없으면 무한 반복
+	if(confirm("종료하겠습니까?")) break
+}
+
+ 
+function sumArray(a) {
+	var sum = 0;
+	for(var i=0; i < a.length; i++) {
+		sum += a[i];
+	}
+	return sum;
+}
+var a = [3,5,1,2,6,7];
+console.log(sumArray(a)); // -> 24
+```
+
+-   for문의 세미콜론은 생략 불가한다. 조건식이 없으면 무한 반복한다.
+
+4\. for/in문
+
+객체 안의 프로퍼티를 순회하는 반복문이다.
+
+```java script
+//for/in문 기본 문법
+for (변수 in 객체 표현식) 문장
+```
+
+```java script
+var obj = {a:1, b:2, c:3}
+for(var p in obj){
+   console.log("p = " + p) //키를 가져옴
+}
+
+var obj = {a:1, b:2, c:3}
+for(var p in obj){
+   console.log(`obj.${p}=${obj[p]}`) //값을 가져오기 위해선 괄호 연산자 사용
+}
+```
+
+-   객체 표현식이 null 또는 undefined로 평가되면 반복문은 종료된다.
+-   객체면 프로퍼티 키가 차례로 변수에 할당되고 각 프로퍼티에 대해서 문장이 한 번씩 실행된다.
+-   키를 받아오기 때문에 값을 가져오기 위해선 괄호 연산자를 사용해야 한다.
+
+#### 점프문
+
+프로그램의 다른 위치로 이동하는 제어 구문이다.
+
+-   break : switch문, 반복문 내에서만 사용 가능하다.
+-   continue : 반복문 내에서만 사용 가능하다.
+-   라벨문 : 문장에  라벨을  붙이면  break문이나  continue문을  실행했을  때  점프하는  위치로  지정할  수  있다. break와 continue 하고만 함께 쓰일 수 있다. 즉 라벨문도 결국 switch와 반복문에서만 사용 가능하다.
+
+**1\. break문**
+
+```java script
+//break문 예제
+var a=[2,4,6,8,10]
+var b=[1,3,5,6,9,11]
+loop: for(var i=0; i<a.length; i++) {
+   for(var j=0; j<b.length; j++) {
+      if(a[i] == b[j]) break loop; //라벨이 붙은 문장 끝으로 점프
+   }
+}
+console.log(`a[${i}] = b[${j}]`)
+```
+
+-   loop 라벨을 달아두었다.
+-   두 레이어에서 같은 값을 찾으면 break문으로 해당 루프를 종료한다.
+-   주로 중첩 반복문 안에서 전체 반복문을 종료할 때 사용한다.
+
+**2\. continue문**
+
+여러 종류의 반복문에서 다음과 같이 사용된다.
+
+-   while : 반복문의 처음으로 돌아가서 조건식 평가, true면 처음부터 실행
+-   do/while : 중간을 건너뛰고 반복문의 마지막 조건식 평가, true면 처음부터 실행
+-   for : 반복식 실행 후, 조건식 평가. true면 반복문 이어서 실행
+-   for/in : 반복문의 처음으로 되돌아감. 지정한 변수에 할당된 프로퍼티의 다음 프로퍼티부터 시작
+
+```java script
+//continue문 예제
+//양수값만 더하기, continue문이 실행되면 반복문 재시작
+var a = [2,5,-1,7,-3,6,9]
+for(var i=0, sum=0; i<a.length; i++) {
+   if(a[i]<0) continue;
+   sum += a[i]
+}
+console.log(sum)
+
+//모든 요소의 값이 10이하인 배열 찾아서 각 배열의 평균값 구하고, 최대 평균값 구하기
+var a =[[2,4,6,8],[1,5,12,3],[7,6,8,5],[5,15,3,4],[3,2,9,4]]
+var max = Number.NEGATIVE_INFINITY; //음의 무한대
+mainloop: for(var i=0; i<a.length; i++) {
+   var average = 0;
+   for(var j=0; j<a[i].length; j++){
+      if(a[i][j]>10) continue mainloop;
+      average += a[i][j]
+   }
+   average /= a[i].length
+   console.log(`i = ${i} : 평균값 = ${average}`);
+   if(max < average) {max = average};
+}
+console.log(`최대 평균값 = ${max}`)
+```
+
+-   for문 내에서 continue의 조건에 걸리면 해당 순서의 동작은 넘어가고 다음부터 다시 진행된다.
+
+---
+
+#### <추가내용>
+
+**빅오 표기법**
+
+알고리즘의 효율성을 평가하기 위한 분석법이다. 데이터가 주어졌을 때 연산의 횟수를 측정하여 복잡도를 계산한다. 
+
+데이터의 개수 n을 무한대로 하여 알고리즘의 최악의 경우로 복잡도를 측정한다. 즉 값이 클수록 복잡도가 높다는 것을 의미한다.
+
+-   표기 : O(n)
+
+```java script
+function bigoexample(n){
+	for(var i=0; i<n; i++){
+	console.log(i)
+	}
+}
+//O(n)
+
+function bigoexample(n){
+	for(var i=0; i<n; i++){
+	console.log(i)
+	for(var j=0; j<n; j++){
+	console.log(j)
+	}}
+}
+//O(n^2)
+
+function bigoexample(n){
+	for(var i=0; i<n; i++){
+	console.log(i)
+	for(var j=0; j<n; j++){
+	console.log(j)
+	for(var j=0; j<n; j++){
+	console.log(j)
+	}}}
+}
+//O(n^3)
+```
+
+-   중첩 반복문의 경의 n의 제곱으로 복잡도가 계산된다.
+
+```java script
+//계수 법칙
+function bigoexample(n){
+	var count = 0;
+	for(var i=0; i<n; i++){
+		count += 1
+	}
+	for(var i=0; i<5*n; i++){
+		count += 1
+	}
+	return count;
+}
+//n + 5n = O(6n)
+//O(6n) == O(n) : n이 무한대로 가면서 계수는 무시된다
+
+function bigoexample(n){
+	var count = 0;
+	for(var i=0; i<n; i++){
+		count += 1
+	for(var j=0; j<5*n; j++){
+		count += 1
+	}}
+	return count;
+}
+//5n * n = O(5n^2)
+//O(5n^2) == O(n^2) : n이 무한대로 가면서 계수는 무시된다
+```
+
+-   n이 무한대로 증가하는 경우 계수가 곱해지는 것은 값에 변화를 주지 않고 무의미하다고 본다. 따라서 계수 생략이 가능하다.
+-   즉 O(5n^2) == O(n^2)
+
+<pre>
+<code>
+참고 코드
+ch07 폴더
+</code>
+</pre>
+
+블로그링크 : <https://jungeunpyun.tistory.com/58>
