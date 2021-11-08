@@ -876,3 +876,550 @@ ch07 폴더
 </pre>
 
 블로그링크 : <https://jungeunpyun.tistory.com/58>
+
+---
+<br></br>
+
+### 📌 18장 생성자와 클래스 구문
+
+#### 생성자란
+
+생성자란 new 연산자와 함께 사용하여 객체를 생성(초기화)하는 함수를 말합니다.
+
+java나 c++은 클래스를 이용하여 프로퍼티를 갖는 객체를 여러 개 생성할 수 있습니다. (붕어빵 틀로 여러 개의 붕어빵을 찍어내는 것처럼)
+
+하지만 javascript에는 클래스가 없는 대신 생성자라는 함수로 이름이 같은 메서드와 프로퍼티를 가진 객체를 여러 개 생성 가능합니다.
+
+javascript는 프로토타입 상속에 기반을 둔 객체 지향 언어입니다.
+
+여기서 **상속**이란 특정 객체가 다른 객체로부터 기능을 이어받는 것을 의미합니다.
+
+상속을 사용하면 기존 객체에 정의된 프로퍼티와 매서드를 그대로 가져올 수 있고 거기에 추가해서 객체를 확장시킬 수도 있습니다.
+
+메서드를 생성자의 프로토타입객체(상속해준 부모 객체)에 추가해두면 메모리 낭비를 피할 수 있고(각각의 객체에 두 번 저장하지 않음)
+
+해당 메서드를 다른 생성자에도 상속할 수 있습니다.
+
+---
+
+#### 생성자 정의 방법
+
+생성자의 정의 방법은 총 4가지가 있습니다. 각 방법들을 알아볼까요?
+
+```java script
+// 1. 함수 선언문
+function Card(suit, rank) {
+    this.suit = suit;
+    this.rank = rank;
+}
+Card.prototype.show = function(){
+    console.log(this.suit + this.rank)
+}
+
+// 2. 함수 리터럴
+var Card = function(suit, rank) {
+    this.suit = suit;
+    this.rank = rank;
+}
+Card.prototype.show = function(){
+    console.log(this.suit + this.rank)
+}
+
+// 3. 클래스 선언문
+class Card {
+    constructor (suit, rank){
+        this.suit = suit;
+        this.rank = rank;
+    }
+    show(){
+        console.log(this.suit + this.rank)
+    }
+}
+
+// 4. 클래스 표현식
+var Card = class {
+    constructor (suit, rank){
+        this.suit = suit;
+        this.rank = rank;
+    }
+    show(){
+        console.log(this.suit + this.rank)
+    }
+}
+```
+
+-   1 함수 선언문은 자바스크립트 엔진이 프로그램 또는 함수의 시작부분으로 끌어올려서 선언합니다. (Hoisting)
+-   2,3,4는 hoisting되지 않기 때문에 호출하기 전에 무조건 선언되어야 합니다.
+
+---
+
+이제 본격적으로 생성자를 정의하는 방법을 알아보도록 합시다. 처음으로 정의해볼 생성자는 바로 접근자 생성자입니다.
+
+**접근자**란 객체가 가진 프로퍼티 값을 객체 밖에서 읽거나 쓸 수 있도록 제공하는 메서드입니다.
+
+객체 프로퍼티를 객체 밖에서 조작하는 것은 데이터의 유지보수에 좋지 않기 때문에getter 함수 (읽을 때) setter함수 (쓸때)를 정의하여 데이터를 읽을때 값을 가공해서 내보낼 수도 있고 쓰는 것을 제한하거나 데이터를 가공해서 쓸 수 있게끔 합니다.
+
+접근자 프로퍼티를 가진 객체를 생성하는 생성자를 정의하는 방법을 알아봅니다. 객체 생성이 아닌 생성자를 정의하는 것에 유의합시다!
+
+아래 예시는 name 접근자 프로퍼티를 가진 객체를 생성하는 생성자 정의하기입니다.
+
+```java script
+function Person(name) {
+    Object.defineProperty(this, "name", { 
+        get: function() {
+            return name;
+        },
+        set: function(newName) {
+            // name = newName;
+            name = newName.charAt(0).toUpperCase() + newName.substring(1);
+        },
+        enumerable: true,
+        configurable: true
+    });
+}
+
+Person.prototype.sayName = function() {
+    console.log(this)
+    console.log(this.name);
+};
+
+var person = new Person("Tom"); //인수 name : Tom
+console.log(person,"|" ,person.name) //Person { name: [Getter/Setter] } | Tom
+person.sayName(); 
+//Person { name: [Getter/Setter] }
+//Tom
+console.log(person.name); //get : Tom
+person.name = "huck"; //set : Huck
+console.log(person.name); //get : Huck
+person.sayName(); 
+//Person { name: [Getter/Setter] }
+//Huck
+```
+
+-   Object.defineProperties 메서드를 이용하여 게터와 세터를 정의할 수 있습니다.
+-   위 예제에서는 name이라는 이름을 가진 접근자 프로퍼티를 정의했습니다.
+-   new 연산자를 이용해서 person이라는 새로운 인스턴스를 생성했습니다.
+-   Tom은 Person 생성자의 인수로 들어갑니다.
+-   **인스턴스 person의 name 프로퍼티가 바로 접근자 프로퍼티입니다. (person.name)**
+-   console.log(person.name)은 인수로 받은 Tom을 접근자 프로퍼티 게터를 이용하여 return 합니다.
+-   person.name = "huck"은 접근자 프로퍼티 세터에 huck을 입력합니다. 세터의 인수인 newName으로 huck이 입력되고 해당 인수는 가공 과정을 거쳐 첫 글자가 대문자로 변경된 후 name 프로퍼티에 저장됩니다.
+-   이후 다시 게터 접근자를 사용했을 때 변경된 name인 Huck이 return 됩니다.
+-   **생성자 프로토타입의 메서드 sayName은 생성된 객체(this)의 name값을 출력**합니다. this.name 이 바로 접근자 프로퍼티가 되기 때문에 console.log(this.name) === console.log(person.name)으로 똑같은 결과가 출력되는 것입니다.
+
+---
+
+#### 생성자 상속
+
+객체뿐 아니라 생성자도 상속이 가능합니다.
+
+**상속하는 생성자**를 슈퍼 타입 생성자라고 하고, **상속받는 생성자**를 서브 타입 생성자라고 합니다.
+
+생성자 상속의 예제를 봅시다.
+
+```java script
+function Ellipse(a, b) {
+    this.a = a;  // 장축 방향 반지름
+    this.b = b;  // 단축 방향 반지름
+}
+// 타원의 넓이를 계산하는 메서드
+Ellipse.prototype.getArea = function() {
+    return Math.PI*this.a*this.b;
+};
+// Object.prototype.toSting를 덮어쓴다
+Ellipse.prototype.toString = function() {
+    return "Ellipse " + this.a + " " + this.b;
+};
+
+
+function Circle(r) {  //생성자 정의
+    this.a = r;
+    this.b = r;
+}
+
+Circle.prototype.test = function() {
+    console.log("From circle prototype")
+};
+
+var circle = new Circle(2);
+```
+
+-   처음 Ellipse라는 생성자를 정의했습니다.
+-   해당 생성자는 a, b라는 프로퍼티와 getArea, toString이라는 프로토타입 메서드를 가지고 있습니다.
+-   이후 Circle이라는 새로운 생성자를 정의했습니다.
+-   Circle 생성자를 이용해서 circle이라는 인스턴스를 만들었습니다.
+
+여기서 **circle의 프로토타입은 Circle.prototype이고, Circle.prototype의 프로토타입은 Object.prototype**입니다.
+
+이때 circle이 Ellipse 생성자를 상속받기 원하는 경우 위 프로토타입 체인에 Ellipse.prototype을 추가해주어야 합니다.
+
+슈퍼 타입 생성자로부터 프로토타입을 상속받아서 사용할 수 있는 방법은 총 3가지가 있습니다.
+
+1\. Circle.prototype 완전 교체
+
+현재 Object.prototpye을 보고 있는 Circle.prototype을 Ellipse.prototype을 보고있는 Circle.prototype으로 교체해줍니다.
+
+이때 Object.create 메서드를 사용할 수 있습니다.
+
+```java script
+function Ellipse(a, b) {
+    this.a = a;  // 장축 방향 반지름
+    this.b = b;  // 단축 방향 반지름
+}
+// 타원의 넓이를 계산하는 메서드
+Ellipse.prototype.getArea = function() {
+    return Math.PI*this.a*this.b;
+};
+// Object.prototype.toSting를 덮어쓴다
+Ellipse.prototype.toString = function() {
+    return "Ellipse " + this.a + " " + this.b;
+};
+
+
+
+function Circle(r) {  //생성자 정의
+    this.a = r;
+    this.b = r;
+}
+
+Circle.prototype.test = function() {
+    console.log("From circle prototype")
+};
+
+var circle = new Circle(2); 
+
+Circle.prototype = Object.create(Ellipse.prototype, {
+    constructor: {
+        configurable: true,
+        enumerable: true,
+        value: Circle,
+        writable: true
+    }
+});
+
+//toString 재정의
+Circle.prototype.toString = function() {
+    return "Circle " + this.a + " " + this.b;
+};
+
+// Circle 생성자로 circle 인스턴스 다시 생성
+var circle = new Circle(2);
+
+
+console.log(circle.getArea());   // → 12.566370614359172
+console.log(circle.toString());  // → Circle 2 2
+```
+
+-   Object.create를 이용해서 Ellipse.prototye을 프로토타입으로 가지는 새로운 Circle.prototype을 생성했습니다.
+-   이때 **프로토타입과 그 프로토타입의 객체는 서로 prototype 그리고 constructor라는 관계로 묶어있어야 서로 연결 고리를 유지할 수 있습니다.** 즉, Circle의 프로타입은 Circle.prototype이고 Circle.prototype의 constructor는 Circle이 되어야 합니다.
+-   Circle.prototype을 재정의해줄 때 이러한 연결고리를 만들어주기 위해 constructor도 한번 더 정의해주어야 합니다.
+-   이제 프로토타입 체인은 **circle -> Circle.prototpye -> Ellipse.prototype -> Object.prototype**으로 변경되었습니다. 따라서 Ellipse.prototype이 가지고 있는 메서드를 사용할 수 있습니다.
+-   이때 toString메서드를 재정의하여 덮어쓸 수도 있습니다.
+
+2\. 생성자로 인스턴스 새로 만들기
+
+Object.prototpye을 사용하지 않고 new 연산자로 인스턴스를 새로 만들어서 사용할 수도 있습니다.
+
+```java script
+// 2. 생성자의 prototype 상속 방법 2
+
+
+function Ellipse(a, b) {
+    this.a = a;  // 장축 방향 반지름
+    this.b = b;  // 단축 방향 반지름
+}
+// 타원의 넓이를 계산하는 메서드
+Ellipse.prototype.getArea = function() {
+    return Math.PI*this.a*this.b;
+};
+// Object.prototype.toSting를 덮어쓴다
+Ellipse.prototype.toString = function() {
+    return "Ellipse " + this.a + " " + this.b;
+};
+
+function Circle(r) {
+    this.a = r;
+    this.b = r;
+}
+
+Circle.prototype = new Ellipse(); //생성자로 인스턴스 새로 만들기
+Circle.prototype.constructor = Circle; //constructor 연결
+
+//toString 재정의
+Circle.prototype.toString = function() {
+    return "Circle " + this.a + " " + this.b;
+};
+
+var circle = new Circle(2);
+
+console.log(circle.getArea());   // → 12.566370614359172
+console.log(circle.toString());  // → Circle 2 2
+```
+
+-   Circle.prototype을 Ellipse 생성자로 인스턴스화 하여 정의해줍니다.
+-   이때도 Circle과의 연결 고리를 유지하기 위하여 constructor를 Circle로 넣어줍니다.
+
+3\. 슈퍼 타입 생성자의 프로퍼티 & 프로토타입 빌려오기
+
+지금까지는 Circle안에서 프로퍼티를 새로 생성하고 Circle.prototype을 새로 정의해주었지만 Ellipse에서 바로 프로퍼티와 프로토타입을 빌려올 수 있는 방법이 있습니다. 바로 call을 사용하는 방법입니다.
+
+```java script
+//  지금까지는 toStrig 메서드를 다시 정의해서 덮어썼는데
+// 새로 정의하는 대신 Ellipse.prototype 메서드를 이용하는 방법
+
+
+function Ellipse(a, b) {
+    this.a = a;  // 장축 방향 반지름
+    this.b = b;  // 단축 방향 반지름
+}
+// 타원의 넓이를 계산하는 메서드
+Ellipse.prototype.getArea = function() {
+    return Math.PI*this.a*this.b;
+};
+// Object.prototype.toSting를 덮어쓴다
+Ellipse.prototype.toString = function() {
+    return "Ellipse " + this.a + " " + this.b;
+};
+
+function Circle(r) {
+    // Ellipse 생성자를 빌려와서 프로퍼티를 정의합니다
+    Ellipse.call(this, r, r);
+    // 이곳에서 새로운 프로퍼티를 작성하거나, 기존의 프로퍼티를 덮어쓸 수 있음.
+}
+
+// 슈퍼 타입의 toString 메서드를 이용해서 Circle.prototype.toString를 정의한다
+// 프로토타입을 call로 불러온것처럼 메서드역시 call로 불러올 수 있음
+Circle.prototype.toString = function() {
+    var str = Ellipse.prototype.toString.call(this);
+    return str.replace("Ellipse", "Circle");
+};
+
+Circle.prototype.getArea = function() {
+    return Ellipse.prototype.getArea.call(this);
+};
+
+var circle = new Circle(2);
+console.log(circle.getArea());   // → 12.566370614359172
+console.log(circle.toString());  // → Circle 2 2
+```
+
+-   Ellipse.call을 이용하여 Circle에서 받을 인수가 Ellipse의 인수로 들어갈 수 있게끔 만들어 줍니다.
+-   마찬가지로 toString과 getArea 메서드 역시 call을 이용해서 빌려옵니다. 이때 replace로 string 역시 변경 가능합니다.
+
+---
+
+#### 클래스 구문
+
+생성자 생성 방법의 3,4번이었던 클래스를 이용한 생성 방법에 대하여 알아보도록 하겠습니다.
+
+클래스 구문의 종류에는 **클래스 선언문**과 **클래스 표현식** 두 가지가 있습니다.
+
+1\. 클래스 구문의 종류
+
+```java script
+// 1. 클래스 선언문
+class Circle { //Circle : 생성자 함수의 이름 === 클래스 이름
+    //class내에 하나의 constructor 존재, 프로퍼티 모두 정의
+    constructor(center, radius) { 
+        this.center = center;
+        this.radius = radius;
+    }
+    // constructor 이후에 작성된 클래스 멤버 : *prototype*의 메서드
+    area() {
+        return Math.PI*this.radius*this.radius;
+    }
+}
+
+
+// 2. 클래스 표현식
+var Circle = class {
+    constructor(center, radius) { 
+        this.center = center;
+        this.radius = radius;
+    }
+    area() {
+        return Math.PI*this.radius*this.radius;
+    }
+}
+```
+
+-   클래스 선언문 내부에는 무조건 **하나의 constructor**가 필요합니다. 해당 constructor 안에는 Class의 **모든 프로퍼티**가 입력됩니다.
+-   constructor 이후에 나오는 method들은 class의 프로토타입의 메서드로 들어갑니다.
+-   클래스 선언문과 클래스 표현식은 함수 선언문과 함수 리터럴처럼 정의하는 부분만 약간 다르고 내부 구성은 일치합니다.
+
+2\. 클래스 선언문과 함수 선언문의 차이
+
+-   클래스 선언문은 hoisting 불가 (생성자 사용 전 정의되어야 함)
+-   클래스 선언문은 한 번만 작성 가능 (덮어쓰기 안됨), 두 개 이상 선언되면 에러 발생
+-   클래스 선언문에 정의한 생성자만 따로 호출 불가 (게터, 세터로 접근 필요)
+
+3\. 접근자 프로퍼티 생성을 클래스로 해보기
+
+```java script
+class Person {
+    // 생성자를 사용한 초기화
+    constructor(name) {
+        this.name = name; //person.name = "Tom"
+    }
+    // prototype 메서드
+    get name() {
+        return this._name;
+    }
+    set name(value) {
+        this._name = value;
+    }
+    sayName() {
+        console.log(this.name);
+    }
+}
+
+var person = new Person("Tom"); //세터 프로퍼티에 값 대입하면 객체는 _name이라는 새로운 프로퍼티 추가
+console.log(person);  //Person { _name: 'Tom' }
+console.log(person.name);  // → Tom
+person.name = "Huck"; //세터 프로퍼티에 값 대입하면 객체는 _name이라는 새로운 프로퍼티 추가
+console.log(person);  //Person { _name: 'Huck' }
+console.log(person.name);  // → Huck
+person.sayName();          // → Huck
+
+// 여기서 get, set은 Person.prototype의 메서드
+// 18-1의 get, set은 Person 자체의 메서드
+```
+
+-   Class 선언문으로 Person이란 생성자를 정의해줍니다.
+-   Person 생성자의 인스턴스화와 동시에 세터 프로퍼티의 value에 "Tom"을 입력합니다. 이때 \_name이라는 새로운 프로퍼티가 추가됩니다.
+-   게터 함수는 \_name 프로퍼티 값을 받아옵니다.
+-   sayName()의 this.name에서 name은 프로퍼티 값이 아닌 게터 함수입니다. 따라서 게터 함수가 \_name을 출력하는 것입니다.
+-   class 구문에서 게터와 세터 함수는 Person.prototype의 메서드입니다. 함수 선언문에서 게터와 세터 함수가 Person 자체의 메서드였던것과는 다르다는 것을 유의하시기 바랍니다.
+
+4\. 클래스 생성자에 정적 메서드 추가하기
+
+prototype이 아닌 클래스 생성자에 메서드를 추가할 수도 있습니다. 이것을 정적 메서드라고 하고 앞에 static을 붙여줌으로 정의가 가능합니다.
+
+```java script
+class Person {
+    constructor(name) {
+        this.name = name;
+        Person.personCount++;
+    }
+    get name() {
+        return this._name;
+    }
+    set name(value) {
+        this._name = value;
+    }
+    sayName() {
+        console.log(this.name);
+    }
+    // 정적 메서드
+    static count() {
+        return Person.personCount;
+    }
+}
+Person.personCount = 0;
+
+var person1 = new Person("Tom");
+console.log(person1) //Person { _name: 'Tom' }
+console.log(Person) //[class Person] { personCount: 1 }
+console.log(Person.count());  // → 1
+
+var person2 = new Person("Huck");
+console.log(person1) //Person { _name: 'Tom' }
+console.log(person2) //Person { _name: 'Huck' }
+console.log(Person) //[class Person] { personCount: 1 }
+console.log(Person.count());  // → 2
+```
+
+-   Person이라는 class에 count()라는 정적 메서드를 추가했습니다. 해당 메서드는 Person 클래스에 존재하는 personCount를 return 합니다.
+-   클래스의 프로퍼티가 정의될 때마다 personCount가 1씩 올라가게 했습니다.
+-   person1이라는 인스턴스를 정의하면서 Tom이라는 인수를 입력하며 \_name이라는 프로퍼티가 추가되었습니다.
+-   또 다른 person2라는 인스턴스를 생성하여 Huck이라는 \_name프로퍼티를 추가해주었습니다.
+-   이때 \_name 프로퍼티는 각 생성된 객체 인스턴스의 프로퍼티로 들어가고 personCount는 Person 클래스 자체적으로 ++됩니다. 따라서 다른 인스턴스의 프러퍼티 값을 변경하더라도 personCount의 값은 2가 됩니다.
+
+5\. 상속으로 클래스 확장하기
+
+extends 키워드를 사용하여 다른 생성자를 상속받을 수 있습니다.
+
+```java script
+class Circle {
+    constructor(center, radius) {
+        this.center = center;
+        this.radius = radius;
+    }
+    area() {
+        return Math.PI*this.radius*this.radius;
+    }
+    toString() {
+        return "Circle "
+            + "중심점 ("+ this.center.x + ","+ this.center.y
+            + "), 반지름 = "+ this.radius;
+    }
+}
+
+class Ball extends Circle { //Circle 클래스를 상속 받음
+    move(dx, dy) { //Circle의 중심점 프로퍼티 받아옴
+        this.center.x += dx; 
+        this.center.y += dy;
+    }
+}
+
+var ball = new Ball({x: 0, y: 0}, 2); //인스턴스 생성
+console.log(ball.toString());   // → Circle 중심점 (0,0), 반지름 = 2
+console.log(ball.area());       // → 12.566370614359172
+ball.move(1,2);
+console.log(ball.toString());   // → Circle 중심점 (1,2), 반지름 = 2
+
+// Ball 생성자의 인스턴스가 Circle 생성자의 프로퍼티, 메서드 그리고 추가된 move까지 사용 가능
+```
+
+-   Ball 클래스는 Circle 클래스를 상속받습니다.
+-   Circle 클래스의 프로퍼티를 상속받기 때문에 해당 프로퍼티 값을 사용하여 메서드를 추가할 수 있습니다.
+-   즉 Ball 생성자의 인스턴스가 Circle 생성자의 프로퍼티, 메서드 그리고 추가된 move까지 모두 사용 가능합니다.
+
+6\. 메서드 덮어쓰기
+
+super 키워드를 사용하여 서브 타입 생성자는 슈퍼 타입 생성자의 메서드를 덮어쓸 수 있습니다.
+
+```java script
+class Circle {
+    constructor(center, radius) {
+        this.center = center;
+        this.radius = radius;
+    }
+    area() {
+        return Math.PI*this.radius*this.radius;
+    }
+    toString() {
+        return "Circle "
+            + "중심점 ("+ this.center.x + ","+ this.center.y
+            + "), 반지름 = "+ this.radius;
+    }
+}
+
+class Ball extends Circle {
+    move(dx, dy) {
+        this.center.x += dx;
+        this.center.y += dy;
+    }
+    toString() {
+        var str = super.toString(); //toString 메서드 덮어쓰기
+        return str.replace("Circle", "Ball");
+    }
+}
+
+var ball = new Ball({x: 0, y: 0}, 2);
+console.log(ball.toString());   // → Circle 중심점 (0,0), 반지름 = 2
+```
+
+-   상속받는 Circle 클래스의 메서드 toString을 super 키워드를 이용하여 덮어씁니다.
+
+---
+
+지금까지 상속자와 클래스 구문에 대하여 알아보았습니다. 관련 코드는 아래 github에 있습니다. 감사합니다 :)
+
+<pre>
+<code>
+참고 코드
+ch18. 생성자와 클래스 구문
+</code>
+</pre>
+
+블로그링크 : <https://jungeunpyun.tistory.com/72>
